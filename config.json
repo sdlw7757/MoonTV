@@ -77,5 +77,8 @@
       "api": "https://ikunzyapi.com/api.php/provide/vod",
       "name": "iKun资源"
     }
-  }
+  },
+    "蜂巢": {
+      "api": "https://api.fczy888.me/api.php/provide/vod",
+      "name": "蜂巢资源"
 }
