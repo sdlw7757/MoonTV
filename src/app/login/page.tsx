@@ -3,7 +3,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 import { useSite } from '@/components/SiteProvider';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -15,18 +15,20 @@ function LoginPageClient() {
   const [username, setUsername] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [shouldAskUsername, setShouldAskUsername] = useState(false);
+  const [enableRegister, setEnableRegister] = useState(false);
   const { siteName } = useSite();
 
-  // 当 STORAGE_TYPE 不为空且不为 localstorage 时，要求输入用户名
-  const shouldAskUsername =
-    typeof window !== 'undefined' &&
-    (window as any).RUNTIME_CONFIG?.STORAGE_TYPE &&
-    (window as any).RUNTIME_CONFIG?.STORAGE_TYPE !== 'localstorage';
-
-  // 是否允许注册
-  const enableRegister =
-    typeof window !== 'undefined' &&
-    Boolean((window as any).RUNTIME_CONFIG?.ENABLE_REGISTER);
+  // 在客户端挂载后设置配置
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storageType = (window as any).RUNTIME_CONFIG?.STORAGE_TYPE;
+      setShouldAskUsername(storageType && storageType !== 'localstorage');
+      setEnableRegister(
+        Boolean((window as any).RUNTIME_CONFIG?.ENABLE_REGISTER)
+      );
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
