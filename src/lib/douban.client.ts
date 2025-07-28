@@ -1,4 +1,5 @@
 import { DoubanItem, DoubanResult } from './types';
+import { getDoubanProxyUrl } from './utils';
 
 interface DoubanCategoriesParams {
   kind: 'tv' | 'movie';
@@ -58,16 +59,6 @@ async function fetchWithTimeout(
     clearTimeout(timeoutId);
     throw error;
   }
-}
-
-/**
- * 获取豆瓣代理 URL 设置
- */
-export function getDoubanProxyUrl(): string | null {
-  if (typeof window === 'undefined') return null;
-
-  const doubanProxyUrl = localStorage.getItem('doubanProxyUrl');
-  return doubanProxyUrl && doubanProxyUrl.trim() ? doubanProxyUrl.trim() : null;
 }
 
 /**

@@ -31,7 +31,9 @@
 
 <details>
   <summary>点击查看项目截图</summary>
-  <img src="public/screenshot.png" alt="项目截图" style="max-width:600px">
+  <img src="public/screenshot1.png" alt="项目截图" style="max-width:600px">
+  <img src="public/screenshot2.png" alt="项目截图" style="max-width:600px">
+  <img src="public/screenshot3.png" alt="项目截图" style="max-width:600px">
 </details>
 
 ## 🗺 目录
@@ -84,7 +86,7 @@
 
 1. **Fork** 本仓库到你的 GitHub 账户。
 2. 登陆 [Vercel](https://vercel.com/)，点击 **Add New → Project**，选择 Fork 后的仓库。
-3. （强烈建议）设置 PASSWORD 环境变量。
+3. 设置 PASSWORD 环境变量。
 4. 保持默认设置完成首次部署。
 5. 如需自定义 `config.json`，请直接修改 Fork 后仓库中该文件。
 6. 每次 Push 到 `main` 分支将自动触发重新构建。
@@ -111,7 +113,7 @@
 3. 选择 Pages，导入现有的 Git 存储库，选择 Fork 后的仓库
 4. 构建命令填写 **pnpm install --frozen-lockfile && pnpm run pages:build**，预设框架为无，构建输出目录为 `.vercel/output/static`
 5. 保持默认设置完成首次部署。进入设置，将兼容性标志设置为 `nodejs_compat`
-6. （强烈建议）首次部署完成后进入设置，新增 PASSWORD 密钥（变量和机密下），而后重试部署。
+6. 首次部署完成后进入设置，新增 PASSWORD 密钥（变量和机密下），而后重试部署。
 7. 如需自定义 `config.json`，请直接修改 Fork 后仓库中该文件。
 8. 每次 Push 到 `main` 分支将自动触发重新构建。
 
@@ -134,7 +136,7 @@ docker pull ghcr.io/senshinya/moontv:latest
 
 # 运行容器
 # -d: 后台运行  -p: 映射端口 3000 -> 3000
-docker run -d --name moontv -p 3000:3000 ghcr.io/senshinya/moontv:latest
+docker run -d --name moontv -p 3000:3000 --env PASSWORD=your_password ghcr.io/senshinya/moontv:latest
 ```
 
 访问 `http://服务器 IP:3000` 即可。（需自行到服务器控制台放通 `3000` 端口）
@@ -218,6 +220,7 @@ networks:
 | NEXT_PUBLIC_ENABLE_REGISTER | 是否开放注册，仅在非 localstorage 部署时生效                | true / false                     | false                                                                                                                      |
 | NEXT_PUBLIC_SEARCH_MAX_PAGE | 搜索接口可拉取的最大页数                                    | 1-50                             | 5                                                                                                                          |
 | NEXT_PUBLIC_IMAGE_PROXY     | 默认的浏览器端图片代理                                      | url prefix                       | (空)                                                                                                                       |
+| NEXT_PUBLIC_DOUBAN_PROXY    | 默认的浏览器端豆瓣数据代理                                  | url prefix                       | (空)                                                                                                                       |
 
 ## 配置说明
 

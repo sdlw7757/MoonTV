@@ -44,6 +44,7 @@ export default async function RootLayout({
     '本网站仅提供影视信息搜索服务，所有内容均来自第三方网站。本站不存储任何视频资源，不对任何内容的准确性、合法性、完整性负责。';
   let enableRegister = process.env.NEXT_PUBLIC_ENABLE_REGISTER === 'true';
   let imageProxy = process.env.NEXT_PUBLIC_IMAGE_PROXY || '';
+  let doubanProxy = process.env.NEXT_PUBLIC_DOUBAN_PROXY || '';
   if (
     process.env.NEXT_PUBLIC_STORAGE_TYPE !== 'd1' &&
     process.env.NEXT_PUBLIC_STORAGE_TYPE !== 'upstash'
@@ -53,6 +54,7 @@ export default async function RootLayout({
     announcement = config.SiteConfig.Announcement;
     enableRegister = config.UserConfig.AllowRegister;
     imageProxy = config.SiteConfig.ImageProxy;
+    doubanProxy = config.SiteConfig.DoubanProxy;
   }
 
   // 将运行时配置注入到全局 window 对象，供客户端在运行时读取
@@ -60,6 +62,7 @@ export default async function RootLayout({
     STORAGE_TYPE: process.env.NEXT_PUBLIC_STORAGE_TYPE || 'localstorage',
     ENABLE_REGISTER: enableRegister,
     IMAGE_PROXY: imageProxy,
+    DOUBAN_PROXY: doubanProxy,
   };
 
   return (

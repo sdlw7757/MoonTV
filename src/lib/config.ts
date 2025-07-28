@@ -159,6 +159,7 @@ async function initConfig() {
               Number(process.env.NEXT_PUBLIC_SEARCH_MAX_PAGE) || 5,
             SiteInterfaceCacheTime: fileConfig.cache_time || 7200,
             ImageProxy: process.env.NEXT_PUBLIC_IMAGE_PROXY || '',
+            DoubanProxy: process.env.NEXT_PUBLIC_DOUBAN_PROXY || '',
           },
           UserConfig: {
             AllowRegister: process.env.NEXT_PUBLIC_ENABLE_REGISTER === 'true',
@@ -197,6 +198,7 @@ async function initConfig() {
           Number(process.env.NEXT_PUBLIC_SEARCH_MAX_PAGE) || 5,
         SiteInterfaceCacheTime: fileConfig.cache_time || 7200,
         ImageProxy: process.env.NEXT_PUBLIC_IMAGE_PROXY || '',
+        DoubanProxy: process.env.NEXT_PUBLIC_DOUBAN_PROXY || '',
       },
       UserConfig: {
         AllowRegister: process.env.NEXT_PUBLIC_ENABLE_REGISTER === 'true',
@@ -236,6 +238,8 @@ export async function getConfig(): Promise<AdminConfig> {
       process.env.NEXT_PUBLIC_ENABLE_REGISTER === 'true';
     adminConfig.SiteConfig.ImageProxy =
       process.env.NEXT_PUBLIC_IMAGE_PROXY || '';
+    adminConfig.SiteConfig.DoubanProxy =
+      process.env.NEXT_PUBLIC_DOUBAN_PROXY || '';
 
     // 合并文件中的源信息
     fileConfig = runtimeConfig as unknown as ConfigFileStruct;
@@ -261,6 +265,27 @@ export async function getConfig(): Promise<AdminConfig> {
         source.from = 'custom';
       }
     });
+
+    const ownerUser = process.env.USERNAME || '';
+    // 检查配置中的站长用户是否和 USERNAME 匹配，如果不匹配则降级为普通用户
+    let containOwner = false;
+    adminConfig.UserConfig.Users.forEach((user) => {
+      if (user.username !== ownerUser && user.role === 'owner') {
+        user.role = 'user';
+      }
+      if (user.username === ownerUser) {
+        containOwner = true;
+        user.role = 'owner';
+      }
+    });
+
+    // 如果不在则添加
+    if (!containOwner) {
+      adminConfig.UserConfig.Users.unshift({
+        username: ownerUser,
+        role: 'owner',
+      });
+    }
     cachedConfig = adminConfig;
   } else {
     // DB 无配置，执行一次初始化
@@ -320,6 +345,7 @@ export async function resetConfig() {
         Number(process.env.NEXT_PUBLIC_SEARCH_MAX_PAGE) || 5,
       SiteInterfaceCacheTime: fileConfig.cache_time || 7200,
       ImageProxy: process.env.NEXT_PUBLIC_IMAGE_PROXY || '',
+      DoubanProxy: process.env.NEXT_PUBLIC_DOUBAN_PROXY || '',
     },
     UserConfig: {
       AllowRegister: process.env.NEXT_PUBLIC_ENABLE_REGISTER === 'true',

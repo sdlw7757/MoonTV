@@ -51,6 +51,7 @@ interface SiteConfig {
   SearchDownstreamMaxPage: number;
   SiteInterfaceCacheTime: number;
   ImageProxy: string;
+  DoubanProxy: string;
 }
 
 // 视频源数据类型
@@ -301,12 +302,12 @@ const UserConfig = ({ config, role, refreshConfig }: UserConfigProps) => {
             允许新用户注册
             {isD1Storage && (
               <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
-                (D1 环境下不可修改)
+                (D1 环境下请通过环境变量修改)
               </span>
             )}
             {isUpstashStorage && (
               <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
-                (Upstash 环境下不可修改)
+                (Upstash 环境下请通过环境变量修改)
               </span>
             )}
           </label>
@@ -962,6 +963,7 @@ const SiteConfigComponent = ({ config }: { config: AdminConfig | null }) => {
     SearchDownstreamMaxPage: 1,
     SiteInterfaceCacheTime: 7200,
     ImageProxy: '',
+    DoubanProxy: '',
   });
   // 保存状态
   const [saving, setSaving] = useState(false);
@@ -979,6 +981,7 @@ const SiteConfigComponent = ({ config }: { config: AdminConfig | null }) => {
       setSiteSettings({
         ...config.SiteConfig,
         ImageProxy: config.SiteConfig.ImageProxy || '',
+        DoubanProxy: config.SiteConfig.DoubanProxy || '',
       });
     }
   }, [config]);
@@ -1026,12 +1029,12 @@ const SiteConfigComponent = ({ config }: { config: AdminConfig | null }) => {
           站点名称
           {isD1Storage && (
             <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
-              (D1 环境下不可修改)
+              (D1 环境下请通过环境变量修改)
             </span>
           )}
           {isUpstashStorage && (
             <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
-              (Upstash 环境下不可修改)
+              (Upstash 环境下请通过环境变量修改)
             </span>
           )}
         </label>
@@ -1062,12 +1065,12 @@ const SiteConfigComponent = ({ config }: { config: AdminConfig | null }) => {
           站点公告
           {isD1Storage && (
             <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
-              (D1 环境下不可修改)
+              (D1 环境下请通过环境变量修改)
             </span>
           )}
           {isUpstashStorage && (
             <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
-              (Upstash 环境下不可修改)
+              (Upstash 环境下请通过环境变量修改)
             </span>
           )}
         </label>
@@ -1139,12 +1142,12 @@ const SiteConfigComponent = ({ config }: { config: AdminConfig | null }) => {
           图片代理前缀
           {isD1Storage && (
             <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
-              (D1 环境下不可修改)
+              (D1 环境下请通过环境变量修改)
             </span>
           )}
           {isUpstashStorage && (
             <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
-              (Upstash 环境下不可修改)
+              (Upstash 环境下请通过环境变量修改)
             </span>
           )}
         </label>
@@ -1169,6 +1172,49 @@ const SiteConfigComponent = ({ config }: { config: AdminConfig | null }) => {
         />
         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
           用于代理图片访问，解决跨域或访问限制问题。留空则不使用代理。
+        </p>
+      </div>
+
+      {/* 豆瓣代理设置 */}
+      <div>
+        <label
+          className={`block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 ${
+            isD1Storage || isUpstashStorage ? 'opacity-50' : ''
+          }`}
+        >
+          豆瓣代理地址
+          {isD1Storage && (
+            <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
+              (D1 环境下请通过环境变量修改)
+            </span>
+          )}
+          {isUpstashStorage && (
+            <span className='ml-2 text-xs text-gray-500 dark:text-gray-400'>
+              (Upstash 环境下请通过环境变量修改)
+            </span>
+          )}
+        </label>
+        <input
+          type='text'
+          placeholder='例如: https://proxy.example.com/fetch?url='
+          value={siteSettings.DoubanProxy}
+          onChange={(e) =>
+            !isD1Storage &&
+            !isUpstashStorage &&
+            setSiteSettings((prev) => ({
+              ...prev,
+              DoubanProxy: e.target.value,
+            }))
+          }
+          disabled={isD1Storage || isUpstashStorage}
+          className={`w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+            isD1Storage || isUpstashStorage
+              ? 'opacity-50 cursor-not-allowed'
+              : ''
+          }`}
+        />
+        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+          用于代理豆瓣数据访问，解决跨域或访问限制问题。留空则使用服务端API。
         </p>
       </div>
 
